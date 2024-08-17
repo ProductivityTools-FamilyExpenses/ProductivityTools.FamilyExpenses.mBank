@@ -16,10 +16,13 @@ function myFunction() {
             const content = attachement.getDataAsString();
             const $ = Cheerio.load(content);
             var data = [];
-            $("table > tbody > tr > td > table").each((index, element) => {
+            $("table > tbody > tr > td > table > tbody > tr").each((index, element) => {
               var row = [];
               $(element).find("td").each((index, child) => {
-                row.push($(child).text());
+                var rowContent=$(child).text().trim()
+                console.log("x")
+                console.log(rowContent)
+                row.push(rowContent);
               });
               if (row.length > 0) {
                 data.push(row);
@@ -27,19 +30,7 @@ function myFunction() {
             });
 
             console.log(data);
-
-            var x = $("Table");
-            console.log(x);
-            var y = x[3];
-            //var z = y("TD").first().text();
-
-            var res = XmlService.parse(content);
-            Logger.log(res.getContent()) // foo
-
-            console.log(x);
-
           }
-
           //SaveAttachement(attachments[k], targetDirectory)
         }
 
