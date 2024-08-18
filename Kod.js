@@ -1,3 +1,14 @@
+function getTransferRow(date, data) {
+
+  if (data[1].startsWith("mBank: Autoryzacja karty")) {
+    var segments = data[1].split(":");
+    var value = segments[3].replace(". Dostepne", "");
+    return [date, data[0], value, data[1]]
+  }
+
+  return [date, data[0], "xx", data[1]]
+}
+
 function getSheet(trixUrl, sheetName) {
   var mainsheet = SpreadsheetApp.openByUrl(trixUrl);
   var sheet = mainsheet.getSheetByName(sheetName)
@@ -8,9 +19,10 @@ function copyDataToSpreadsheet(date, data) {
   var trixUrl = "https://docs.google.com/spreadsheets/d/1XJAduyj-wL-kVE12Ib93htKbiEyTXuzYOG7j4BedrOA/edit?gid=0#gid=0"
   var sheet = getSheet(trixUrl, "Expenses")
   for (var row = 0; row < data.length; row++) {
-    sheet.appendRow([date, data[row][0], data[row][1]])
-    for (var column = 0; column < data[row].length; column++)
-      console.log(date, data[row][column])
+    if (data[row][0].startsWith("Czas") == false) {
+      var transferRow = getTransferRow(date, data[row]);
+      sheet.appendRow(transferRow)
+    }
   }
 }
 
