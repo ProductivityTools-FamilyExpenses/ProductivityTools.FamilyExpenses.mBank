@@ -1,9 +1,19 @@
 function getTransferRow(date, data) {
   var details = data[1]
   if (details.startsWith("mBank: Autoryzacja karty")) {
-    var segments = details.split(":");
-    var value = segments[3].replace(". Dostepne", "");
-    return [date, data[0], value, details]
+    var segments = details.split(" ");
+    var srcCard = segments[3];
+    segments = details.split(":")
+    var name = segments[2].replace(". Kwota", "")
+    var amountRaw = segments[3].trim();
+    var amount = amountRaw.split(" ")[0];
+    var currency = amountRaw.split(" ")[1].replace(".", "");
+    var amountLeftRaw = segments[4].trim();
+    var amountLeft = amountLeftRaw.split(" ")[0]
+    var amountLeftCurrency = amountLeftRaw.split(" ")[1]
+
+    //var segments = details.split(":");
+    return [date, data[0], "Card", srcCard, "", amount, currency, name, amountLeft, amountLeftCurrency, details]
   }
   if (details.startsWith("mBank: Przelew wych")) {
     var segments = details.split(" ");
@@ -15,7 +25,7 @@ function getTransferRow(date, data) {
     var left = details.split("dla")[1].split("Dost.")[1].trim().split(" ");
     var leftValue = left[0];
     var leftCurrency = left[1];
-    return [date, data[0], srcAccount, dstAccount, value, currency, nameSegments, leftValue, leftCurrency, details]
+    return [date, data[0], "Transfer", srcAccount, dstAccount, value, currency, nameSegments, leftValue, leftCurrency, details]
   }
   if (details.startsWith("mBank: Odmowa autoryzacji") ||
     details.startsWith("mBank: Potwierdzenie poprawnego")) {
