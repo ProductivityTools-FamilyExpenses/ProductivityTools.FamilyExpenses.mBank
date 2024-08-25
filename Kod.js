@@ -27,6 +27,19 @@ function getTransferRow(date, data) {
     var leftCurrency = left[1];
     return [date, data[0], "Przelew wychodzacy", srcAccount, dstAccount, value, currency, nameSegments, leftValue, leftCurrency, details]
   }
+  if (details.startsWith("mBank: Przelew przych")) {
+    var segments = details.split(" ");
+    var srcAccount = segments[5];
+    var dstAccount = segments[8];
+    var value = segments[10];
+    var currency = segments[11];
+    var nameSegments = details.split("od")[1].split("Dost.")[0].trim();
+    var left = details.split("od")[1].split("Dost.")[1].trim().split(" ");
+    var leftValue = left[0];
+    var leftCurrency = left[1];
+    return [date, data[0], "Przelew przychodzący", srcAccount, dstAccount, value, currency, nameSegments, leftValue, leftCurrency, details]
+  }
+
   if (details.startsWith("mBank: Obciazenie")) {
     var segments = details.split(" ");
     var srcAccount = segments[3]
