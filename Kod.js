@@ -2,42 +2,42 @@ function getTransferRow(date, data) {
   var details = data[1]
   if (details.startsWith("mBank: Autoryzacja karty")) {
     var segments = details.split(" ");
-    var srcCard = segments[3];
+    var srcCard = segments[3].replace(":","").trim();
     segments = details.split(":")
-    var name = segments[2].replace(". Kwota", "")
+    var name = segments[2].replace(". Kwota", "").trim();
     var amountRaw = segments[3].trim();
     var amount = amountRaw.split(" ")[0];
     var currency = amountRaw.split(" ")[1].replace(".", "");
     var amountLeftRaw = segments[4].trim();
     var amountLeft = amountLeftRaw.split(" ")[0]
-    var amountLeftCurrency = amountLeftRaw.split(" ")[1]
+    var amountLeftCurrency = amountLeftRaw.split(" ")[1].replace(".","");
 
     //var segments = details.split(":");
-    return [date, data[0], "Autoryzacja karty", srcCard, "", amount, currency, name, amountLeft, amountLeftCurrency, details]
+    return [date, data[0], "Autoryzacja karty", srcCard, "","=VLOOKUP(D2;AccountConfig!A:B;2;False)", amount, currency, name, amountLeft, amountLeftCurrency, details]
   }
   if (details.startsWith("mBank: Przelew wych")) {
     var segments = details.split(" ");
     var srcAccount = segments[5];
     var dstAccount = segments[8];
-    var value = segments[10];
+    var amount = segments[10];
     var currency = segments[11];
     var nameSegments = details.split("dla")[1].split("Dost.")[0].trim();
     var left = details.split("dla")[1].split("Dost.")[1].trim().split(" ");
     var leftValue = left[0];
-    var leftCurrency = left[1];
-    return [date, data[0], "Przelew wychodzacy", srcAccount, dstAccount, value, currency, nameSegments, leftValue, leftCurrency, details]
+    var leftCurrency = left[1].replace(".","");
+    return [date, data[0], "Przelew wychodzacy", srcAccount, dstAccount,"=VLOOKUP(D2;AccountConfig!A:B;2;False)", amount, currency, nameSegments, leftValue, leftCurrency, details]
   }
   if (details.startsWith("mBank: Przelew przych")) {
     var segments = details.split(" ");
     var srcAccount = segments[5];
     var dstAccount = segments[8];
-    var value = segments[10];
+    var amount = segments[10];
     var currency = segments[11];
-    var nameSegments = details.split("od")[1].split("Dost.")[0].trim();
+    var name = details.split("od")[1].split("Dost.")[0].trim();
     var left = details.split("od")[1].split("Dost.")[1].trim().split(" ");
     var leftValue = left[0];
-    var leftCurrency = left[1];
-    return [date, data[0], "Przelew przychodzący", srcAccount, dstAccount, value, currency, nameSegments, leftValue, leftCurrency, details]
+    var leftCurrency = left[1].replace(".","");;
+    return [date, data[0], "Przelew przychodzący", srcAccount, dstAccount, "=VLOOKUP(D2;AccountConfig!A:B;2;False)",amount, currency, name, leftValue, leftCurrency, details]
   }
 
   if (details.startsWith("mBank: Obciazenie")) {
@@ -49,7 +49,7 @@ function getTransferRow(date, data) {
     var amountLeftRaw = details.split('tytulem: ')[1].split(";")[1].trim().split(" ")
     var amountLeft = amountLeftRaw[1];
     var amountLeftCurrency = amountLeftRaw[2]
-    return [date, data[0], "Obciazenie", srcAccount, "", amount, amountCurrency, name, amountLeft, amountLeftCurrency, details]
+    return [date, data[0], "Obciazenie", srcAccount, "","=VLOOKUP(D2;AccountConfig!A:B;2;False)", amount, amountCurrency, name, amountLeft, amountLeftCurrency, details]
   }
   if (details.startsWith("mBank: Odmowa autoryzacji") ||
     details.startsWith("mBank: Potwierdzenie poprawnego") ||
