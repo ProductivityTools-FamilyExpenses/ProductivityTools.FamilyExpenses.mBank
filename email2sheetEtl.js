@@ -1,3 +1,14 @@
+function myFunction() {
+  var threads = GmailApp.getInboxThreads();
+  for (var i = 0; i < threads.length; i++) {
+    var thread = threads[i];
+    var subject = thread.getFirstMessageSubject();
+    if (subject == "mBank - powiadomienie e-mail") {
+      processOneMBankMessage(thread);
+    }
+  }
+}
+
 function getTransferRow(date, data) {
   var details = data[1]
   if (details.startsWith("mBank: Autoryzacja karty")) {
@@ -13,7 +24,7 @@ function getTransferRow(date, data) {
     var amountLeftCurrency = amountLeftRaw.split(" ")[1].replace(".", "");
 
     //var segments = details.split(":");
-    return [date, data[0], "Autoryzacja karty", srcCard, "", "", amount, currency, name, amountLeft, amountLeftCurrency, details]
+    return [date, data[0], "Autoryzacja karty", srcCard, "", "", amount, currency, name, "","", amountLeft, amountLeftCurrency, details]
   }
   if (details.startsWith("mBank: Przelew wych")) {
     var segments = details.split(" ");
@@ -25,7 +36,7 @@ function getTransferRow(date, data) {
     var left = details.split("dla")[1].split("Dost.")[1].trim().split(" ");
     var leftValue = left[0];
     var leftCurrency = left[1].replace(".", "");
-    return [date, data[0], "Przelew wychodzacy", srcAccount, dstAccount, "", amount, currency, nameSegments, leftValue, leftCurrency, details]
+    return [date, data[0], "Przelew wychodzacy", srcAccount, dstAccount, "", amount, currency, nameSegments, "","",  leftValue, leftCurrency, details]
   }
   if (details.startsWith("mBank: Przelew przych")) {
     var segments = details.split(" ");
@@ -37,7 +48,7 @@ function getTransferRow(date, data) {
     var left = details.split("od")[1].split("Dost.")[1].trim().split(" ");
     var leftValue = left[0];
     var leftCurrency = left[1].replace(".", "");;
-    return [date, data[0], "Przelew przychodzący", srcAccount, dstAccount, "", amount, currency, name, leftValue, leftCurrency, details]
+    return [date, data[0], "Przelew przychodzący", srcAccount, dstAccount, "", amount, currency, name, "","",  leftValue, leftCurrency, details]
   }
 
   if (details.startsWith("mBank: Obciazenie")) {
@@ -49,7 +60,7 @@ function getTransferRow(date, data) {
     var amountLeftRaw = details.split('tytulem: ')[1].split(";")[1].trim().split(" ")
     var amountLeft = amountLeftRaw[1];
     var amountLeftCurrency = amountLeftRaw[2]
-    return [date, data[0], "Obciazenie", srcAccount, "", "", amount, amountCurrency, name, amountLeft, amountLeftCurrency, details]
+    return [date, data[0], "Obciazenie", srcAccount, "", "", amount, amountCurrency, name, "","",  amountLeft, amountLeftCurrency, details]
   }
   if (details.startsWith("mBank: Odmowa autoryzacji") ||
     details.startsWith("mBank: Potwierdzenie poprawnego") ||
@@ -128,13 +139,4 @@ function processOneMBankMessage(thread) {
   }
 }
 
-function myFunction() {
-  var threads = GmailApp.getInboxThreads();
-  for (var i = 0; i < threads.length; i++) {
-    var thread = threads[i];
-    var subject = thread.getFirstMessageSubject();
-    if (subject == "mBank - powiadomienie e-mail") {
-      processOneMBankMessage(thread);
-    }
-  }
-}
+
