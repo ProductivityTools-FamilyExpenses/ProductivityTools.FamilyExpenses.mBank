@@ -1,6 +1,6 @@
 function myFunction() {
   var threads = GmailApp.getInboxThreads();
-  for (var i = threads.length-1; i > 0; i--) {
+  for (var i = threads.length - 1; i > 0; i--) {
     var thread = threads[i];
     var subject = thread.getFirstMessageSubject();
     if (subject == "mBank - powiadomienie e-mail") {
@@ -51,7 +51,7 @@ function getTransferRow(date, data) {
     return [date, data[0], "Przelew przychodzący", srcAccount, dstAccount, "", amount, currency, name, "", "", leftValue, leftCurrency, details]
   }
 
-  if (details.startsWith("mBank: Obciazenie")) {
+  if (details.startsWith("mBank: Obciazenie"))  {
     var segments = details.split(" ");
     var srcAccount = segments[3]
     var amount = -1 * Number(segments[6].replace(",", "."));
@@ -62,12 +62,25 @@ function getTransferRow(date, data) {
     var amountLeftCurrency = amountLeftRaw[2]
     return [date, data[0], "Obciazenie", srcAccount, "", "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, details]
   }
+
+  if ( details.startsWith("mBank: Uznanie na rach.")) {
+    var segments = details.split(" ");
+    var dstAccount = segments[4]
+    var amount =  Number(segments[7].replace(",", "."));
+    var amountCurrency = segments[8]
+    var name = details.split('tytulem: ')[1].split(";")[0].trim();
+    var amountLeftRaw = details.split('tytulem: ')[1].split(";")[1].trim().split(" ")
+    var amountLeft = amountLeftRaw[1];
+    var amountLeftCurrency = amountLeftRaw[2]
+    return [date, data[0], "Uznanie", "", dstAccount, "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, details]
+  }
   if (details.startsWith("mBank: Odmowa autoryzacji") ||
     details.startsWith("mBank: Potwierdzenie poprawnego") ||
     details.split('mBank: Twoj przelew do') ||
     details.split('mBank: Niepoprawne logowanie ')) {
     return null;
   }
+
 
   return [date, data[0], "xx", details]
 }
