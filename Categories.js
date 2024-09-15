@@ -1,7 +1,7 @@
 
-function myFunction2() {
+function setCatgoriesForTransactions() {
   var trixUrl = "https://docs.google.com/spreadsheets/d/1XJAduyj-wL-kVE12Ib93htKbiEyTXuzYOG7j4BedrOA/edit?gid=0#gid=0"
-  var sheet = getSheet(trixUrl, "Expenses")
+  var sheet = getSheet(trixUrl, "mBankAccountExpenses")
 
   var categoryDictionary = getCategoryDictionary(trixUrl);
   var dataRange = sheet.getDataRange();

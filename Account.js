@@ -1,10 +1,17 @@
-
-
-function setAccount() {
+function setAccountForTransactionsSheets() {
   var trixUrl = "https://docs.google.com/spreadsheets/d/1XJAduyj-wL-kVE12Ib93htKbiEyTXuzYOG7j4BedrOA/edit?gid=0#gid=0"
-  var sheet = getSheet(trixUrl, "Expenses")
+  var sheetAccountExpenses = getSheet(trixUrl, "mBankAccountExpenses")
+  var sheetCardExpenses = getSheet(trixUrl, "mBankCardExpenses")
+  setAccountForTransactions(sheetAccountExpenses);
+  setAccountForTransactions(sheetCardExpenses);
 
-  var accountDictionary = getAccountDictionary(trixUrl);
+
+  //var cell = sheet.getRange("F2:F");
+  //cell.setFormulaR1C1('=IF(R[0]C[-2]="";"";VLOOKUP(R[0]C[-2];AccountConfig!C[-5]:C[-4];2;false))');
+}
+
+function setAccountForTransactions(sheet){
+ var accountDictionary = getAccountDictionary(trixUrl);
   var dataRange = sheet.getDataRange();
   var rowsCount = dataRange.getNumRows();
 
@@ -20,9 +27,6 @@ function setAccount() {
       account.setValue(accountDictionary[src])
     }
   }
-
-  //var cell = sheet.getRange("F2:F");
-  //cell.setFormulaR1C1('=IF(R[0]C[-2]="";"";VLOOKUP(R[0]C[-2];AccountConfig!C[-5]:C[-4];2;false))');
 }
 
 function getSheet(trixUrl, sheetName) {

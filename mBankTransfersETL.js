@@ -1,4 +1,4 @@
-function myFunction() {
+function importTransactionsFromGmail() {
   var threads = GmailApp.getInboxThreads();
   for (var i = threads.length - 1; i > 0; i--) {
     var thread = threads[i];
@@ -24,7 +24,7 @@ function getTransferRow(date, data) {
     var amountLeftCurrency = amountLeftRaw.split(" ")[1].replace(".", "");
 
     //var segments = details.split(":");
-    return [date, data[0], "Autoryzacja karty", srcCard, "", "", amount, currency, name, "", "", amountLeft, amountLeftCurrency, details]
+    return [date, data[0], "Autoryzacja karty", srcCard, "", "", amount, currency, name, "", "", amountLeft, amountLeftCurrency, '', details]
   }
   if (details.startsWith("mBank: Przelew wych")) {
     var segments = details.split(" ");
@@ -36,7 +36,7 @@ function getTransferRow(date, data) {
     var left = details.split("dla")[1].split("Dost.")[1].trim().split(" ");
     var leftValue = left[0];
     var leftCurrency = left[1].replace(".", "");
-    return [date, data[0], "Przelew wychodzacy", srcAccount, dstAccount, "", amount, currency, nameSegments, "", "", leftValue, leftCurrency, details]
+    return [date, data[0], "Przelew wychodzacy", srcAccount, dstAccount, "", amount, currency, nameSegments, "", "", leftValue, leftCurrency, '', details]
   }
   if (details.startsWith("mBank: Przelew przych")) {
     var segments = details.split(" ");
@@ -48,10 +48,10 @@ function getTransferRow(date, data) {
     var left = details.split("od")[1].split("Dost.")[1].trim().split(" ");
     var leftValue = left[0];
     var leftCurrency = left[1].replace(".", "");;
-    return [date, data[0], "Przelew przychodzący", srcAccount, dstAccount, "", amount, currency, name, "", "", leftValue, leftCurrency, details]
+    return [date, data[0], "Przelew przychodzący", srcAccount, dstAccount, "", amount, currency, name, "", "", leftValue, leftCurrency, '', details]
   }
 
-  if (details.startsWith("mBank: Obciazenie"))  {
+  if (details.startsWith("mBank: Obciazenie")) {
     var segments = details.split(" ");
     var srcAccount = segments[3]
     var amount = -1 * Number(segments[6].replace(",", "."));
@@ -60,19 +60,19 @@ function getTransferRow(date, data) {
     var amountLeftRaw = details.split('tytulem: ')[1].split(";")[1].trim().split(" ")
     var amountLeft = amountLeftRaw[1];
     var amountLeftCurrency = amountLeftRaw[2]
-    return [date, data[0], "Obciazenie", srcAccount, "", "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, details]
+    return [date, data[0], "Obciazenie", srcAccount, "", "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, '', details]
   }
 
-  if ( details.startsWith("mBank: Uznanie na rach.")) {
+  if (details.startsWith("mBank: Uznanie na rach.")) {
     var segments = details.split(" ");
     var dstAccount = segments[4]
-    var amount =  Number(segments[7].replace(",", "."));
+    var amount = Number(segments[7].replace(",", "."));
     var amountCurrency = segments[8]
     var name = details.split('tytulem: ')[1].split(";")[0].trim();
     var amountLeftRaw = details.split('tytulem: ')[1].split(";")[1].trim().split(" ")
     var amountLeft = amountLeftRaw[1];
     var amountLeftCurrency = amountLeftRaw[2]
-    return [date, data[0], "Uznanie", "", dstAccount, "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, details]
+    return [date, data[0], "Uznanie", "", dstAccount, "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, '', details]
   }
   if (details.startsWith("mBank: Odmowa autoryzacji") ||
     details.startsWith("mBank: Potwierdzenie poprawnego") ||
@@ -93,12 +93,19 @@ function getSheet(trixUrl, sheetName) {
 
 function copyDataToSpreadsheet(date, data) {
   var trixUrl = "https://docs.google.com/spreadsheets/d/1XJAduyj-wL-kVE12Ib93htKbiEyTXuzYOG7j4BedrOA/edit?gid=0#gid=0"
-  var sheet = getSheet(trixUrl, "Expenses")
+  var sheetAccountExpenses = getSheet(trixUrl, "mBankAccountExpenses")
+  var sheetCardExpenses = getSheet(trixUrl, "mBankCardExpenses")
   for (var row = 0; row < data.length; row++) {
     if (data[row][0].startsWith("Czas") == false) {
       var transferRow = getTransferRow(date, data[row]);
       if (transferRow != null) {
-        sheet.appendRow(transferRow)
+
+        if (transferRow[2] == "Autoryzacja karty") {
+          sheetCardExpenses.appendRow(transferRow)
+        }
+        else {
+          sheetAccountExpenses.appendRow(transferRow)
+        }
       }
     }
   }
