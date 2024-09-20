@@ -1,12 +1,28 @@
 function getTransferRow(date, data) {
-
-  if (data[1].startsWith("mBank: Autoryzacja karty")) {
-    var segments = data[1].split(":");
+  var details = data[1]
+  if (details.startsWith("mBank: Autoryzacja karty")) {
+    var segments = details.split(":");
     var value = segments[3].replace(". Dostepne", "");
-    return [date, data[0], value, data[1]]
+    return [date, data[0], value, details]
+  }
+  if (details.startsWith("mBank: Przelew wych")) {
+    var segments = details.split(" ");
+    var srcAccount = segments[5];
+    var dstAccount = segments[8];
+    var value = segments[10];
+    var currency = segments[11];
+    var nameSegments = details.split("dla")[1].split("Dost.")[0].trim();
+    var left = details.split("dla")[1].split("Dost.")[1].trim().split(" ");
+    var leftValue = left[0];
+    var leftCurrency = left[1];
+    return [date, data[0], srcAccount, dstAccount, value, currency, nameSegments, leftValue, leftCurrency, details]
+  }
+  if (details.startsWith("mBank: Odmowa autoryzacji") ||
+    details.startsWith("mBank: Potwierdzenie poprawnego")) {
+    return null;
   }
 
-  return [date, data[0], "xx", data[1]]
+  return [date, data[0], "xx", details]
 }
 
 function getSheet(trixUrl, sheetName) {
@@ -21,7 +37,9 @@ function copyDataToSpreadsheet(date, data) {
   for (var row = 0; row < data.length; row++) {
     if (data[row][0].startsWith("Czas") == false) {
       var transferRow = getTransferRow(date, data[row]);
-      sheet.appendRow(transferRow)
+      if (transferRow != null) {
+        sheet.appendRow(transferRow)
+      }
     }
   }
 }
