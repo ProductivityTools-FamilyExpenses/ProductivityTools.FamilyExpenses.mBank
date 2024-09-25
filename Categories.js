@@ -12,7 +12,7 @@ function setCatgoriesForTransactions() {
     var category = dataRange.getCell(i, 11);
     var categoryValue = category.getValue();
     if (categoryValue == "") {
-      var description = dataRange.getCell(i, 9).getValue();
+      var description = dataRange.getCell(i, 10).getValue();
       if (categoryDictionary[description]) {
         category.setValue(categoryDictionary[description])
       }

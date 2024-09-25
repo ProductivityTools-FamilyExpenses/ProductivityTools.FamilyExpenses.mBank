@@ -24,7 +24,7 @@ function getTransferRow(date, data) {
     var amountLeftCurrency = amountLeftRaw.split(" ")[1].replace(".", "");
 
     //var segments = details.split(":");
-    return [date, data[0], "Autoryzacja karty", srcCard, "", "", amount, currency, name, "", "", amountLeft, amountLeftCurrency, '', details]
+    return [uuid(), date, data[0], "Autoryzacja karty", srcCard, "", "", amount, currency, name, "", "", amountLeft, amountLeftCurrency, '', details]
   }
   if (details.startsWith("mBank: Przelew wych")) {
     var segments = details.split(" ");
@@ -36,7 +36,7 @@ function getTransferRow(date, data) {
     var left = details.split("dla")[1].split("Dost.")[1].trim().split(" ");
     var leftValue = left[0];
     var leftCurrency = left[1].replace(".", "");
-    return [date, data[0], "Przelew wychodzacy", srcAccount, dstAccount, "", amount, currency, nameSegments, "", "", leftValue, leftCurrency, '', details]
+    return [uuid(), date, data[0], "Przelew wychodzacy", srcAccount, dstAccount, "", amount, currency, nameSegments, "", "", leftValue, leftCurrency, '', details]
   }
   if (details.startsWith("mBank: Przelew przych")) {
     var segments = details.split(" ");
@@ -48,7 +48,7 @@ function getTransferRow(date, data) {
     var left = details.split("od")[1].split("Dost.")[1].trim().split(" ");
     var leftValue = left[0];
     var leftCurrency = left[1].replace(".", "");;
-    return [date, data[0], "Przelew przychodzący", srcAccount, dstAccount, "", amount, currency, name, "", "", leftValue, leftCurrency, '', details]
+    return [uuid(), date, data[0], "Przelew przychodzący", srcAccount, dstAccount, "", amount, currency, name, "", "", leftValue, leftCurrency, '', details]
   }
 
   if (details.startsWith("mBank: Obciazenie")) {
@@ -60,7 +60,7 @@ function getTransferRow(date, data) {
     var amountLeftRaw = details.split('tytulem: ')[1].split(";")[1].trim().split(" ")
     var amountLeft = amountLeftRaw[1];
     var amountLeftCurrency = amountLeftRaw[2]
-    return [date, data[0], "Obciazenie", srcAccount, "", "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, '', details]
+    return [uuid(), date, data[0], "Obciazenie", srcAccount, "", "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, '', details]
   }
 
   if (details.startsWith("mBank: Uznanie na rach.")) {
@@ -72,7 +72,7 @@ function getTransferRow(date, data) {
     var amountLeftRaw = details.split('tytulem: ')[1].split(";")[1].trim().split(" ")
     var amountLeft = amountLeftRaw[1];
     var amountLeftCurrency = amountLeftRaw[2]
-    return [date, data[0], "Uznanie", "", dstAccount, "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, '', details]
+    return [uuid(), date, data[0], "Uznanie", "", dstAccount, "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, '', details]
   }
   if (details.startsWith("mBank: Odmowa autoryzacji") ||
     details.startsWith("mBank: Potwierdzenie poprawnego") ||
@@ -83,6 +83,10 @@ function getTransferRow(date, data) {
 
 
   return [date, data[0], "xx", details]
+}
+
+function uuid() {
+  return Utilities.getUuid();
 }
 
 function getSheet(trixUrl, sheetName) {
@@ -100,7 +104,7 @@ function copyDataToSpreadsheet(date, data) {
       var transferRow = getTransferRow(date, data[row]);
       if (transferRow != null) {
 
-        if (transferRow[2] == "Autoryzacja karty") {
+        if (transferRow[4] == "Autoryzacja karty") {
           sheetCardExpenses.appendRow(transferRow)
         }
         else {
