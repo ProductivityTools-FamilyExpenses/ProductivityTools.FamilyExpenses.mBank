@@ -9,7 +9,7 @@ function setCatgoriesForTransactions() {
 
   //var data = dataRange.getValues();
   for (i = 2; i <= rowsCount; i++) {
-    var category = dataRange.getCell(i, 11);
+    var category = dataRange.getCell(i, 12);
     var categoryValue = category.getValue();
     if (categoryValue == "") {
       var description = dataRange.getCell(i, 10).getValue();

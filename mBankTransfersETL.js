@@ -104,7 +104,7 @@ function copyDataToSpreadsheet(date, data) {
       var transferRow = getTransferRow(date, data[row]);
       if (transferRow != null) {
 
-        if (transferRow[4] == "Autoryzacja karty") {
+        if (transferRow[3] == "Autoryzacja karty") {
           sheetCardExpenses.appendRow(transferRow)
         }
         else {
