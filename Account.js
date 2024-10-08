@@ -29,11 +29,11 @@ function setAccountForTransactions(trixUrl, sheet) {
   }
 }
 
-function getSheet(trixUrl, sheetName) {
-  var mainsheet = SpreadsheetApp.openByUrl(trixUrl);
-  var sheet = mainsheet.getSheetByName(sheetName)
-  return sheet;
-}
+// function getSheet(trixUrl, sheetName) {
+//   var mainsheet = SpreadsheetApp.openByUrl(trixUrl);
+//   var sheet = mainsheet.getSheetByName(sheetName)
+//   return sheet;
+// }
 
 function getAccountDictionary(trixUrl) {
   var dictionarySheet = getSheet(trixUrl, "AccountDictionary")

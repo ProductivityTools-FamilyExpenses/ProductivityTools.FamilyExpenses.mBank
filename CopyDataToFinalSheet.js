@@ -1,4 +1,4 @@
-function myFunction() {
+function copyDataToFinalSheet() {
   var trixUrl = "https://docs.google.com/spreadsheets/d/1XJAduyj-wL-kVE12Ib93htKbiEyTXuzYOG7j4BedrOA/edit?gid=0#gid=0"
   var sheetAllTransactions = getSheet(trixUrl, "AllTransactions")
   var dest = sheetAllTransactions;
@@ -9,7 +9,7 @@ function myFunction() {
 
   var sheetmBankAccountExpenses = getSheet(trixUrl, "mBankAccountExpenses")
   var source = sheetmBankAccountExpenses.getDataRange();
-  // CopyData(source, dest)
+   CopyData(source, dest)
 
 }
 
@@ -17,7 +17,7 @@ function myFunction() {
 function CopyData(source, dest) {
   var destExistingGuids = new Array(dest.getDataRange().getValues().length);
   var destData = dest.getDataRange().getValues();
-  for (i = 2; i < destData.length; i++) {
+  for (i = 1; i < destData.length; i++) {
     //console.log(destData[i])
     destExistingGuids.push(destData[i][0])
   }
@@ -41,7 +41,8 @@ function CopyData(source, dest) {
       var sourceGuidCellValue = sourceGuidCell.getValue();
     }
 
-    if (destExistingGuids.indexOf(sourceValues[i][1]) == -1) {
+    console.log("destExistingGuids.indexOf(sourceValues[i][1]",sourceValues[i][0]);
+    if (destExistingGuids.indexOf(sourceValues[i][0]) == -1) {
       dest.appendRow([sourceGuidCellValue, sourceValues[i][1], month, sourceValues[i][6], sourceValues[i][7], sourceValues[i][8], sourceValues[i][9], sourceValues[i][10], sourceValues[i][11]]);
     }
   }

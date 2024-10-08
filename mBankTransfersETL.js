@@ -85,15 +85,9 @@ function getTransferRow(date, data) {
   return [date, data[0], "xx", details]
 }
 
-function uuid() {
-  return Utilities.getUuid();
-}
 
-function getSheet(trixUrl, sheetName) {
-  var mainsheet = SpreadsheetApp.openByUrl(trixUrl);
-  var sheet = mainsheet.getSheetByName(sheetName)
-  return sheet;
-}
+
+
 
 function copyDataToSpreadsheet(date, data) {
   var trixUrl = "https://docs.google.com/spreadsheets/d/1XJAduyj-wL-kVE12Ib93htKbiEyTXuzYOG7j4BedrOA/edit?gid=0#gid=0"

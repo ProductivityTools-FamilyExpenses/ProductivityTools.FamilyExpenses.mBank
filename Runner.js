@@ -1,5 +1,6 @@
 function myFunction() {
   importTransactionsFromGmail()
   setCatgoriesForTransactions()
-  setAccountForTransactions()
+  setAccountForTransactionsSheets()
+  copyDataToFinalSheet();
 }
