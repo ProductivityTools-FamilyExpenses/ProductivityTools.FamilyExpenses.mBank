@@ -9,19 +9,18 @@ function allegroPurchase() {
   for (i = 2; i <= rowsCount; i++) {
     var description = dataRange.getCell(i, 10);
     var descriptionValue = description.getValue();
-    if (descriptionValue == "Allegro /Poznan") {
-      var price = dataRange.getCell(i, 8).getValue();
-      price = price * (-1)
-      var allegroPurchasesWithGivenPrice = findByPrice(price)
-      var formatedPurchases = formatNote(allegroPurchasesWithGivenPrice);
+    if (descriptionValue == "Allegro /Poznan" || descriptionValue == "ALLEGRO.PL") {
       var whatCell = dataRange.getCell(i, 11);
-      whatCell.setNote(formatedPurchases)
-      //console.log(allegroPurchasesWithGivenPrice)
+      var note = whatCell.getNote()
+      if (note == "") {
+        var price = dataRange.getCell(i, 8).getValue();
+        price = price * (-1)
+        var allegroPurchasesWithGivenPrice = findByPrice(price)
+        var formatedPurchases = formatNote(allegroPurchasesWithGivenPrice);
+        whatCell.setNote(formatedPurchases)
+      }
     }
   }
-
-  //var cell = sheet.getRange("F2:F");
-  //cell.setFormulaR1C1('=IF(R[0]C[-2]="";"";VLOOKUP(R[0]C[-2];AccountConfig!C[-5]:C[-4];2;false))');
 }
 
 function formatNote(noteRaw) {
