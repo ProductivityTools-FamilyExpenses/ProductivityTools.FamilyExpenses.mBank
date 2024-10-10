@@ -13,19 +13,30 @@ function allegroPurchase() {
       var price = dataRange.getCell(i, 8).getValue();
       price = price * (-1)
       var allegroPurchasesWithGivenPrice = findByPrice(price)
+      var formatedPurchases = formatNote(allegroPurchasesWithGivenPrice);
       var whatCell = dataRange.getCell(i, 11);
-      whatCell.setNote(allegroPurchasesWithGivenPrice)
-      console.log(allegroPurchasesWithGivenPrice)
+      whatCell.setNote(formatedPurchases)
+      //console.log(allegroPurchasesWithGivenPrice)
     }
   }
 
   //var cell = sheet.getRange("F2:F");
   //cell.setFormulaR1C1('=IF(R[0]C[-2]="";"";VLOOKUP(R[0]C[-2];AccountConfig!C[-5]:C[-4];2;false))');
 }
-function findSomethging() {
-  var r = findByPrice("47.8")
-  console.log(r);
+
+function formatNote(noteRaw) {
+  var result = "";
+  for (k = 0; k < noteRaw.length; k++) {
+    result += noteRaw[k][0].toISOString().split('T')[0] + " " + noteRaw[k][1] + " " + noteRaw[k][2] + '\n';
+  }
+  console.log("Formateed:", result);
+  return result;
 }
+
+// function findSomethging() {
+//   var r = findByPrice("47.8")
+//   console.log(r);
+// }
 
 function findByPrice(queryPrice) {
   var allegroTrix = "https://docs.google.com/spreadsheets/d/1sBC7PWM7DkCA4smf11Gg59tWT5R7JRIRaWqqpkIYgw8/edit?gid=609545681#gid=609545681"
@@ -42,7 +53,8 @@ function findByPrice(queryPrice) {
       console.log("found");
       var itemName = purchaseDataRange.getCell(j, 4)
       var itemDate = purchaseDataRange.getCell(j, 1)
-      result.push([itemDate.getValue(), itemName.getValue()])
+      var itemPrice = purchaseDataRange.getCell(j, 5)
+      result.push([itemDate.getValue(), itemName.getValue(), itemPrice.getValue()])
       // var description = dataRange.getCell(i, 10).getValue();
       // if (categoryDictionary[description]) {
       //   category.setValue(categoryDictionary[description])
