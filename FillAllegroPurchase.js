@@ -1,6 +1,6 @@
-function allegroPurchase() {
-  var trixUrl = "https://docs.google.com/spreadsheets/d/1XJAduyj-wL-kVE12Ib93htKbiEyTXuzYOG7j4BedrOA/edit?gid=0#gid=0"
-  var sheet = getSheet(trixUrl, "mBankAccountExpenses")
+function fillAllegroPurchase(mbankTrixUrl, allegroTrixUrl) {
+  // var trixUrl = "https://docs.google.com/spreadsheets/d/1XJAduyj-wL-kVE12Ib93htKbiEyTXuzYOG7j4BedrOA/edit?gid=0#gid=0"
+  var sheet = getSheet(mbankTrixUrl, "mBankAccountExpenses")
 
   var dataRange = sheet.getDataRange();
   var rowsCount = dataRange.getNumRows();
@@ -16,7 +16,7 @@ function allegroPurchase() {
         var price = dataRange.getCell(i, 8).getValue();
         price = price * (-1)
         var allegroPurchasesWithGivenPrice = findByPrice(price)
-        var formatedPurchases = formatNote(allegroPurchasesWithGivenPrice);
+        var formatedPurchases = formatNote(allegroTrixUrl, allegroPurchasesWithGivenPrice);
         whatCell.setNote(formatedPurchases)
       }
     }
@@ -37,9 +37,9 @@ function formatNote(noteRaw) {
 //   console.log(r);
 // }
 
-function findByPrice(queryPrice) {
-  var allegroTrix = "https://docs.google.com/spreadsheets/d/1sBC7PWM7DkCA4smf11Gg59tWT5R7JRIRaWqqpkIYgw8/edit?gid=609545681#gid=609545681"
-  var purchaseSheet = getSheet(allegroTrix, "Purchases")
+function findByPrice(allegroTrixUrl, queryPrice) {
+  // var allegroTrix = "https://docs.google.com/spreadsheets/d/1sBC7PWM7DkCA4smf11Gg59tWT5R7JRIRaWqqpkIYgw8/edit?gid=609545681#gid=609545681"
+  var purchaseSheet = getSheet(allegroTrixUrl, "Purchases")
   var purchaseDataRange = purchaseSheet.getDataRange();
   var purchaseRowsCount = purchaseDataRange.getNumRows();
   var result = []
