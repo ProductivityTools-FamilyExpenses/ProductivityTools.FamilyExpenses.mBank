@@ -9,7 +9,7 @@ function importTransactionsFromGmail(trixUrl) {
   }
 }
 
-function getTransferRow(date, data) {
+function getTransferRow(threadId, date, data) {
   var details = data[1]
   if (details.startsWith("mBank: Autoryzacja karty")) {
     var segments = details.split(" ");
@@ -24,7 +24,7 @@ function getTransferRow(date, data) {
     var amountLeftCurrency = amountLeftRaw.split(" ")[1].replace(".", "");
 
     //var segments = details.split(":");
-    return [uuid(), date, data[0], "Autoryzacja karty", srcCard, "", "", amount, currency, name, "", "", amountLeft, amountLeftCurrency, '', details]
+    return [threadId, date, data[0], "Autoryzacja karty", srcCard, "", "", amount, currency, name, "", "", amountLeft, amountLeftCurrency, '', details]
   }
   if (details.startsWith("mBank: Przelew wych")) {
     var segments = details.split(" ");
@@ -36,7 +36,7 @@ function getTransferRow(date, data) {
     var left = details.split("dla")[1].split("Dost.")[1].trim().split(" ");
     var leftValue = left[0];
     var leftCurrency = left[1].replace(".", "");
-    return [uuid(), date, data[0], "Przelew wychodzacy", srcAccount, dstAccount, "", amount, currency, nameSegments, "", "", leftValue, leftCurrency, '', details]
+    return [threadId, date, data[0], "Przelew wychodzacy", srcAccount, dstAccount, "", amount, currency, nameSegments, "", "", leftValue, leftCurrency, '', details]
   }
   if (details.startsWith("mBank: Przelew przych")) {
     var segments = details.split(" ");
@@ -48,7 +48,7 @@ function getTransferRow(date, data) {
     var left = details.split("od")[1].split("Dost.")[1].trim().split(" ");
     var leftValue = left[0];
     var leftCurrency = left[1].replace(".", "");;
-    return [uuid(), date, data[0], "Przelew przychodzący", srcAccount, dstAccount, "", amount, currency, name, "", "", leftValue, leftCurrency, '', details]
+    return [threadId, date, data[0], "Przelew przychodzący", srcAccount, dstAccount, "", amount, currency, name, "", "", leftValue, leftCurrency, '', details]
   }
 
   if (details.startsWith("mBank: Obciazenie")) {
@@ -60,7 +60,7 @@ function getTransferRow(date, data) {
     var amountLeftRaw = details.split('tytulem: ')[1].split(";")[1].trim().split(" ")
     var amountLeft = amountLeftRaw[1];
     var amountLeftCurrency = amountLeftRaw[2]
-    return [uuid(), date, data[0], "Obciazenie", srcAccount, "", "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, '', details]
+    return [threadId, date, data[0], "Obciazenie", srcAccount, "", "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, '', details]
   }
 
   if (details.startsWith("mBank: Uznanie na rach.")) {
@@ -72,7 +72,7 @@ function getTransferRow(date, data) {
     var amountLeftRaw = details.split('tytulem: ')[1].split(";")[1].trim().split(" ")
     var amountLeft = amountLeftRaw[1];
     var amountLeftCurrency = amountLeftRaw[2]
-    return [uuid(), date, data[0], "Uznanie", "", dstAccount, "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, '', details]
+    return [threadId, date, data[0], "Uznanie", "", dstAccount, "", amount, amountCurrency, name, "", "", amountLeft, amountLeftCurrency, '', details]
   }
   if (details.startsWith("mBank: Odmowa autoryzacji") ||
     details.startsWith("mBank: Potwierdzenie poprawnego") ||
@@ -86,12 +86,12 @@ function getTransferRow(date, data) {
 }
 
 
-function copyDataToSpreadsheet(trixUrl, date, data) {
+function copyDataToSpreadsheet(trixUrl, threadId, date, data) {
   var sheetAccountExpenses = getSheet(trixUrl, "mBankAccountExpenses")
   var sheetCardExpenses = getSheet(trixUrl, "mBankCardExpenses")
   for (var row = 0; row < data.length; row++) {
     if (data[row][0].startsWith("Czas") == false) {
-      var transferRow = getTransferRow(date, data[row]);
+      var transferRow = getTransferRow(threadId, date, data[row]);
       if (transferRow != null) {
 
         if (transferRow[3] == "Autoryzacja karty") {
@@ -113,7 +113,7 @@ function getDateFromEmailAttachement(attachement) {
   return date;
 }
 
-function getDataFromEmailAttachement(trixUrl, attachement) {
+function getDataFromEmailAttachement(trixUrl, threadId, attachement) {
   //console.log(attachement.getDataAsString())
   const content = attachement.getDataAsString();
   const $ = Cheerio.load(content);
@@ -130,12 +130,13 @@ function getDataFromEmailAttachement(trixUrl, attachement) {
   });
 
   var date = getDateFromEmailAttachement(attachement);
-  copyDataToSpreadsheet(trixUrl, date, data);
+  copyDataToSpreadsheet(trixUrl, threadId, date, data);
   console.log(data);
 }
 
 function processOneMBankMessage(trixUrl, thread) {
   var msgs = thread.getMessages();
+  var threadId = thread.getId();
   var mbank = false;
   var label = GmailApp.getUserLabelByName("PWArchive/mBankTransfers");
 
@@ -146,7 +147,7 @@ function processOneMBankMessage(trixUrl, thread) {
       var attachementName = attachement.getName();
       if (attachementName.startsWith("Powiadomienie e-mail z")) {
         //console.log(attachementName)
-        getDataFromEmailAttachement(trixUrl, attachement);
+        getDataFromEmailAttachement(trixUrl, threadId, attachement);
         mbank = true;
       }
       //SaveAttachement(attachments[k], targetDirectory)
