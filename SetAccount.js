@@ -19,7 +19,7 @@ function setAccountForTransactions(trixUrl, sheet) {
     var src = dataRange.getCell(i, 5).getValue();
     var dest = dataRange.getCell(i, 6).getValue();
     var account = dataRange.getCell(i, 7);
-    if (account.getValue == "") {
+    if (account.getValue() == "") {
       if (accountDictionary[dest]) {
         account.setValue(accountDictionary[dest])
       }
