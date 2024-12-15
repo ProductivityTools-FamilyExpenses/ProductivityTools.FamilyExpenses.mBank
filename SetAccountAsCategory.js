@@ -9,11 +9,17 @@ function setAccountAsCategory(trixUrl) {
   for (i = 2; i <= rowsCount; i++) {
     var account = dataRange.getCell(i, 7);
     var accountValue = account.getValue()
-    if (accountValue == "Wyzywienie" || accountValue == "Kameralne" || accountValue == "Komorska" || accountValue == "Magda" || accountValue == "Komorska" || accountValue == "Niechorze") {
+    //|| accountValue == "Niechorze" 
+    //accountValue == "Kameralne" ||
+    //accountValue == "Komorska"
+    //|| accountValue == "Komorska" 
+    //accountValue == "Wyzywienie"  |
+    if ( accountValue == "Magda"  || accountValue == "Wypłaty") {
       var category = dataRange.getCell(i, 12);
       var categoryValue = category.getValue();
       if (categoryValue == "") {
-        category.setValue(accountValue)
+        var name="Proxy"+accountValue
+        category.setValue(name)
 
       }
     }
