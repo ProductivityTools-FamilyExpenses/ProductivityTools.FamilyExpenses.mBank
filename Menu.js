@@ -1,7 +1,7 @@
 function onOpen(e) {
   var ui = SpreadsheetApp.getUi();
-  ui.createMenu('FamilExpenses')
-      .addItem('PWExecute', 'mainRunner')
+  ui.createMenu('Family Expenses')
+      .addItem('Execute all scripts', 'mainRunner')
       .addSeparator()
       .addSubMenu(
           ui.createMenu('Debug')
