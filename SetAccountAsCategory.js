@@ -14,7 +14,8 @@ function setAccountAsCategory(trixUrl) {
     //accountValue == "Komorska"
     //|| accountValue == "Komorska" 
     //accountValue == "Wyzywienie"  |
-    if ( accountValue == "Magda"  || accountValue == "Wypłaty") {
+    //accountValue == "Magda"  ||
+    if (  accountValue == "Wypłaty") {
       var category = dataRange.getCell(i, 12);
       var categoryValue = category.getValue();
       if (categoryValue == "") {

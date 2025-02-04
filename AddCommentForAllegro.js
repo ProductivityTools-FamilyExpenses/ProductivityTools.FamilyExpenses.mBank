@@ -9,7 +9,7 @@ function fillAllegroPurchase(mbankTrixUrl, allegroTrixUrl) {
   for (i = 2; i <= rowsCount; i++) {
     var description = dataRange.getCell(i, 10);
     var descriptionValue = description.getValue();
-    if (descriptionValue == "Allegro /Poznan" || descriptionValue == "ALLEGRO.PL") {
+    if (descriptionValue == "Allegro /Poznan" || descriptionValue == "ALLEGRO.PL" || descriptionValue == "ALLEGRO.PL &") {
       var whatCell = dataRange.getCell(i, 11);
       var note = whatCell.getNote()
       if (note == "") {
