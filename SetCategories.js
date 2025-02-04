@@ -13,6 +13,7 @@ function setCatgoriesForTransactions(trixUrl) {
     if (categoryValue == "") {
       var description = dataRange.getCell(i, 10).getValue();
       if (categoryDictionary[description]) {
+        console.log(categoryDictionary[description])
         category.setValue(categoryDictionary[description])
       }
     }
