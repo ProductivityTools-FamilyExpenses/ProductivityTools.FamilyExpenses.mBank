@@ -15,11 +15,13 @@ function setAccountForTransactions(trixUrl, sheet) {
   var rowsCount = dataRange.getNumRows();
 
   //var data = dataRange.getValues();
-  for (i = 2; i <= rowsCount; i++) {
-    var src = dataRange.getCell(i, 5).getValue();
-    var dest = dataRange.getCell(i, 6).getValue();
+  //last 200 transactions as timeout when more than 2k is processed
+  for (i = rowsCount-200; i <= rowsCount; i++) {
+    console.log(i)
     var account = dataRange.getCell(i, 7);
     if (account.getValue() == "") {
+      var src = dataRange.getCell(i, 5).getValue();
+      var dest = dataRange.getCell(i, 6).getValue();
       if (accountDictionary[dest]) {
         account.setValue(accountDictionary[dest])
       }

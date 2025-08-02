@@ -3,13 +3,11 @@ function onOpen(e) {
   ui.createMenu('Family Expenses')
     .addItem('Execute all scripts', 'mainRunner')
     .addItem('Fill Categories', 'mainRunnerSetCatgoriesForTransactions')
+    .addItem('Fill allegro transactions','mainRunnerFillAllegroTransactions')
     .addSeparator()
     .addSubMenu(
       ui.createMenu('Debug')
-        .addItem('Run processing now', 'autoProcessMail3')
-        .addItem('Start debug processing run', 'debugAutoProcessMail'))
-    .addSubMenu(ui.createMenu('Logs')
-      .addItem('Cleanup logs', 'cleanupLogs')
-      .addItem('Delete all logs', 'deleteLogs'))
+        .addItem('xxx', 'xxx')
+    )
     .addToUi();
 }

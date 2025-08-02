@@ -33,9 +33,16 @@ function getTransferRow(threadOperationId, date, data) {
     var amount = -1 * Number(segments[10].replace(",", "."));
     var currency = segments[11];
     var nameSegments = details.split("dla")[1].split("Dost.")[0].trim();
-    var left = details.split("dla")[1].split("Dost.")[1].trim().split(" ");
-    var leftValue = left[0];
-    var leftCurrency = left[1].replace(".", "");
+    if (details.includes("Dost.")) {
+      var left = details.split("dla")[1].split("Dost.")[1].trim().split(" ");
+      var leftValue = left[0];
+      var leftCurrency = left[1].replace(".", "");
+    }
+    else
+    {
+      var leftValue="??"
+      var leftCurrency="??"
+    }
     return [threadOperationId, date, data[0], "Przelew wychodzacy", srcAccount, dstAccount, "", amount, currency, nameSegments, "", "", leftValue, leftCurrency, '', details]
   }
   if (details.startsWith("mBank: Przelew przych")) {

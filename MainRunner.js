@@ -3,20 +3,29 @@ function doGet() {
   return "wykonalem sie"
 }
 
+function mbankTrixUrl()
+{
+  return "https://docs.google.com/spreadsheets/d/1XJAduyj-wL-kVE12Ib93htKbiEyTXuzYOG7j4BedrOA/edit?gid=0#gid=0";
+}
+
 function mainRunner() {
-  var mbankTrixUrl = "https://docs.google.com/spreadsheets/d/1XJAduyj-wL-kVE12Ib93htKbiEyTXuzYOG7j4BedrOA/edit?gid=0#gid=0"
-  importTransactionsFromGmail(mbankTrixUrl)
-  setAccountAsCategory(mbankTrixUrl)
-  setCatgoriesForTransactions(mbankTrixUrl)
-  setAccountForTransactionsSheets(mbankTrixUrl)
+  importTransactionsFromGmail(mbankTrixUrl())
+  setAccountAsCategory(mbankTrixUrl())
+  setCatgoriesForTransactions(mbankTrixUrl())
+  setAccountForTransactionsSheets(mbankTrixUrl())
 
   allegroTrixUrl = "https://docs.google.com/spreadsheets/d/1sBC7PWM7DkCA4smf11Gg59tWT5R7JRIRaWqqpkIYgw8/edit?gid=609545681#gid=609545681"
-  fillAllegroPurchase(mbankTrixUrl, allegroTrixUrl)
+  fillAllegroPurchase(mbankTrixUrl(), allegroTrixUrl)
 
   //copyDataToFinalSheet(trixUrl);
 }
 
+function mainRunnerFillAllegroTransactions()
+{
+  allegroTrixUrl = "https://docs.google.com/spreadsheets/d/1sBC7PWM7DkCA4smf11Gg59tWT5R7JRIRaWqqpkIYgw8/edit?gid=609545681#gid=609545681"
+  fillAllegroPurchase(mbankTrixUrl(), allegroTrixUrl)
+}
+
 function mainRunnerSetCatgoriesForTransactions() {
-  var mbankTrixUrl = "https://docs.google.com/spreadsheets/d/1XJAduyj-wL-kVE12Ib93htKbiEyTXuzYOG7j4BedrOA/edit?gid=0#gid=0"
-  setCatgoriesForTransactions(mbankTrixUrl)
+  setCatgoriesForTransactions(mbankTrixUrl())
 }
