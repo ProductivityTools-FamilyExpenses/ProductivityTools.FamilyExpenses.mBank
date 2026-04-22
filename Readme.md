@@ -8,4 +8,5 @@ For some accounts I assume that the category should be as this account for examp
 # Debug
 npm install -g @google/clasp
 clasp -v
+clasp login
 clasp pull
