@@ -1,6 +1,6 @@
 function importTransactionsFromGmail(trixUrl) {
   var threads = GmailApp.getInboxThreads();
-  for (var i = threads.length - 1; i > 0; i--) {
+  for (var i = threads.length - 1; i >= 0; i--) {
     var thread = threads[i];
     var subject = thread.getFirstMessageSubject();
     if (subject == "mBank - powiadomienie e-mail") {
@@ -51,8 +51,14 @@ function getTransferRow(threadOperationId, date, data) {
     var dstAccount = segments[8];
     var amount = 1 * Number(segments[10].replace(",", "."));
     var currency = segments[11];
-    var name = details.split("od")[1].split("Dost.")[0].trim();
-    var left = details.split("od")[1].split("Dost.")[1].trim().split(" ");
+    var name = details.split(" od ")[1].split("Dost.")[0].trim();
+    var temp = details.split(" o d");
+    Logger.log(temp);
+    temp = details.split(" od ")[1];
+    Logger.log(temp);
+    temp = details.split(" od ")[1].split("Dost.");
+    Logger.log(temp);
+    var left = details.split(" od ")[1].split("Dost.")[1].trim().split(" ");
     var leftValue = left[0];
     var leftCurrency = left[1].replace(".", "");;
     return [threadOperationId, date, data[0], "Przelew przychodzący", srcAccount, dstAccount, "", amount, currency, name, "", "", leftValue, leftCurrency, '', details]
@@ -146,7 +152,7 @@ function processOneMBankMessage(trixUrl, thread) {
   var msgs = thread.getMessages();
   var threadId = thread.getId();
   var mbank = false;
-  var label = GmailApp.getUserLabelByName("PWArchive/mBankTransfers");
+  var label = GmailApp.getUserLabelByName(".Archive/mBankTransfers");
 
   for (var j = 0; j < msgs.length; j++) {
     var attachments = msgs[j].getAttachments();
